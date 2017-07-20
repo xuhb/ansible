@@ -1,0 +1,36 @@
+---
+- hosts: '{{hosts}}'
+  remote_user: '{{user}}'
+  vars: 
+     - zookeeper_data_dir: "/home/hadoop/zookeeper-3.4.6/data"
+     - zookeeper_log_dir: "/var/log/zookeeper"
+     - zookeeper_dir: "/home/hadoop/zookeeper-3.4.6"
+     - zookeeper_conf_dir: "/home/hadoop/zookeeper-3.4.6/conf"
+     - status: " "
+  roles:
+     - useradd
+     - zookeeper
+  tags:
+    - zookeeper
+
+###JDK##########
+- hosts: '{{hosts}}'
+  remote_user: '{{user}}'
+  roles:
+     - JDK
+  tags:
+    - jdk
+###useradd######
+#创建用户并添加sudo权限
+#user 为要创建的用户名，user_password 为密码
+- hosts: '{{hosts}}'
+  remote_user: '{{user}}'
+  vars:
+    - user: hadoop
+    - user_password: hadoop123
+
+  roles:
+     - useradd
+  tags:
+   - useradd
+

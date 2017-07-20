@@ -1,0 +1,57 @@
+---
+- name: Copy mysql_tar_gz to client
+  unarchive: src=/etc/ansible/package/mysql_file.tgz  dest=/usr/local/src/
+- name: Copy tukudb.sh to client
+  template: src=tukudb.sh dest=/usr/local/src/mysql_file mode=0755
+
+#- name: install Python interface to MySQL
+#  yum: pkg=MySQL-python state=installed
+#  when: ansible_distribution == 'CentOS'
+
+- name: mkdir mysql datadir
+  file: path={{mysql_data_path}} state=directory
+
+#- name: Install Percona-Server-56-debuginfo-5.6.34-rel79.1.el6.x86_64.rpm
+#  yum: name=/usr/local/src/mysql_file/Percona-Server-56-debuginfo-5.6.34-rel79.1.el6.x86_64.rpm
+
+- name: Install Percona-Server-shared-56-5.6.34-rel79.1.el6.x86_64.rpm
+  yum: name=/usr/local/src/mysql_file/Percona-Server-shared-56-5.6.34-rel79.1.el6.x86_64.rpm
+
+- name: Install Percona-Server-client-56-5.6.34-rel79.1.el6.x86_64.rpm 
+  yum: name=/usr/local/src/mysql_file/Percona-Server-client-56-5.6.34-rel79.1.el6.x86_64.rpm
+
+- name: Install Percona-Server-server-56-5.6.34-rel79.1.el6.x86_64.rpm
+  yum: name=/usr/local/src/mysql_file/Percona-Server-server-56-5.6.34-rel79.1.el6.x86_64.rpm
+
+- name: Install Percona-Server-devel-56-5.6.34-rel79.1.el6.x86_64.rpm 
+  yum: name=/usr/local/src/mysql_file/Percona-Server-devel-56-5.6.34-rel79.1.el6.x86_64.rpm
+
+- name: Install Percona-Server-tokudb-56-5.6.34-rel79.1.el6.x86_64.rpm 
+  yum: name=/usr/local/src/mysql_file/Percona-Server-tokudb-56-5.6.34-rel79.1.el6.x86_64.rpm
+
+- name: init database
+  shell: mysql_install_db --user=mysql --basedir=/usr --datadir={{mysql_data_path}}
+
+- name: copy .my.cnf file with root password credentials
+  template: src=my.cnf dest=/etc/ mode=0600
+  notify: restart mysql
+
+- name: restart mysql
+  shell: /etc/init.d/mysql restart
+
+#- name: update mysql root password for all root accounts
+#  mysql_user: name=root host={{ item }} password={{ mysql_root_password }} login_user=root login_password={{ mysql_root_password }} check_implicit_admin=yes
+#  with_items:
+#      - "{{ ansible_hostname }}"
+#      - 127.0.0.1
+#      - ::1
+#      - localhost
+
+- name: init mysql root password
+  shell: /usr/bin/mysqladmin -u root password '{{mysql_root_password}}'
+
+
+- name: install tukudb mysql plus
+  shell: /usr/local/src/mysql_file/tukudb.sh
+  notify: restart mysql
+     

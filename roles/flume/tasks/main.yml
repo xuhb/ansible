@@ -1,0 +1,23 @@
+---
+- name: Copy apache-flume-1.7.0-bin.tar.gz to client
+  unarchive: src=/etc/ansible/package/apache-flume-1.7.0-bin.tgz  dest=/home/hadoop/ owner=hadoop group=hadoop
+  when: status == 'install'
+
+- name: Setup sinkRouterRecei2.conf
+  template: dest="/home/hadoop/apache-flume-1.7.0-bin/conf" src=sinkRouterRecei2.conf owner=hadoop group=hadoop
+  notify:
+   - restart flume
+
+- name: Setup sinkRouterSender3.conf
+  template: dest="/home/hadoop/apache-flume-1.7.0-bin/conf" src=sinkRouterSender3.conf owner=hadoop group=hadoop
+  notify:
+   - restart flume
+
+- name: mkdir data
+  file: path=/home/hadoop/data state=directory owner=hadoop group=hadoop
+  when: status == 'install'
+
+- name: Start Flume
+  shell: /home/hadoop/apache-flume-1.7.0-bin/bin/runreceiFlume.sh
+  when: status == 'install' 
+

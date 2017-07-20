@@ -1,0 +1,9 @@
+---
+- hosts: hds
+  remote_user: root
+#  roles:
+#     - hostname
+#     - hadoop-master
+#     - grycap.hadoop
+  roles:
+    - { role: 'grycap.hadoop', hadoop_master: '172.16.1.131', hadoop_type_of_node: 'master'}

@@ -1,0 +1,28 @@
+ip={{ ansible_default_ipv4.address}}
+
+{% for host in groups['hadoop'] %}
+   {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}
+{% endfor %}
+
+{% for host in groups['hadoop'] %}
+{{hostvars[host]['ansible_nodename']}}
+{% endfor %}
+
+{% for host in groups['hadoop'] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }} {{hostvars[host]['ansible_nodename']}}
+{% endfor %}
+
+127.0.0.1 {{ansible_nodename}}
+
+{{ansible_lo.ipv4.address}} {{ansible_nodename}}
+
+zookeeper_id
+
+{% for host in groups['zk'] %}
+
+  {%- if host == ansible_fqdn or host in     ansible_all_ipv4_addresses -%}
+server.{{loop.index0}}=0.0.0.0:2888:3888
+{% else %}
+server.{{loop.index0}}={{hostvars[host]['ansible_nodename']}}:2888:3888
+{% endif %}
+{% endfor %}

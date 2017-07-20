@@ -1,0 +1,16 @@
+#!/bin/bash
+# chkconfig:35 81 82
+# description:zookeeper server script
+if [ -z $1 ]
+
+then
+
+echo "缺少位置参数"
+
+echo "请使用$0 {start|start-foreground|stop|restart|status|upgrade|print-cmd}"
+
+exit 1
+
+fi
+
+/opt/zookeeper-3.4.6/bin/zkServer.sh $1

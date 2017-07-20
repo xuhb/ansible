@@ -1,0 +1,79 @@
+---
+- name: Copy hive_tar_gz to client
+  unarchive: src=/etc/ansible/package/hive-1.2.1.tgz  dest=/home/hadoop/ owner=hadoop group=hadoop
+  when: status == 'install'
+
+- name: Setup hive-site.xml
+  template: dest="/home/hadoop/hive-1.2.1/conf" src=hive-site.xml owner=hadoop group=hadoop
+
+- name: Setup hive-env.sh
+  template: dest="/home/hadoop/hive-1.2.1/conf" src=hive-env.sh owner=hadoop group=hadoop mode=0755
+
+- name: Configure HIVE env
+  shell: /bin/echo {{ item }} | sudo tee -a /etc/profile  && source /etc/profile
+  #(shell和command的作用一样，不同的是可以使用管道符号和&&，可以运行多条命令)
+  with_items:
+   - export HIVE_HOME=/home/hadoop/hive-1.2.1
+   - export HADOOP_USER_CLASSPATH_FIRST=true
+   - export PATH=\$JAVA_HOME/bin:\$JAVA_HOME/jre/bin:\$HADOOP_HOME/bin:\$SPARK_HOME/sbin:\$SPARK_HOME/bin:\$HIVE_HOME/bin:\$PATH
+  when: status == 'install'
+
+#- name: Configure hive frofile
+#  shell: /bin/echo {{ item }}  >> /etc/profile && source /etc/profile
+#  with_itmes:
+#   - export HIVE_HOME=/home/hadoop/hive-1.2.1  
+
+#- name: Copy mysql-community-release-el7-5.noarch.rpm to client
+#  copy: src=mysql-community-release-el7-5.noarch.rpm dest=/usr/local/src/ mode=0755
+#  when: status == 'install'
+
+#- name: Copy yum.sh to client
+#  copy: src=yum.sh dest=/usr/local/src/ mode=0755
+#  when: status == 'install'
+
+#- name: setup mysql-community-release-el7-5.noarch.rpm
+#  shell: /usr/local/src/yum.sh
+#  when: status == 'install'
+
+#- name: mkdir mysql datadir
+#  file: path={{mysql_data_path}} state=directory
+#  when: status == 'install'
+
+#- name: install mysql-server
+#  yum: name={{item}}
+#  with_items:
+#       - mysql-server
+#       - mysql
+#       - mysql-devel
+#  when: status == 'install'
+
+#- name: init database
+#  shell: mysql_install_db --user=mysql --basedir=/usr --datadir={{mysql_data_path}}
+#  when: status == 'install'
+
+#- name: copy my.cnf file
+#  template: src=my.cnf dest=/etc/ mode=0600
+#  notify: restart mysql
+# centos 6
+#- name: restart mysql
+#  shell: /etc/init.d/mysqld restart
+
+#centos7
+#- name: enable mysql
+#  shell: systemctl enable mysqld.service
+
+#- name: restart mysql
+#  shell: systemctl restart mysqld
+
+
+#- name: init mysql root password
+#  shell: /usr/bin/mysqladmin -u root password '{{mysql_root_password}}'
+#  when: status == 'install'
+
+#- name: Copy mysql_hive.sh to client
+#  copy: src=mysql_hive.sh dest=/usr/local/src/ mode=0755
+#  when: status == 'install'
+
+#- name: setup hive database
+#  shell: /usr/local/src/mysql_hive.sh
+#  when: status == 'install'

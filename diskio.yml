@@ -1,0 +1,5 @@
+- hosts: hosts_all
+  remote_user: root
+  roles:
+     - diskio
+           

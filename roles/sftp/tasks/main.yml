@@ -1,0 +1,6 @@
+---
+- name: Copy sftp.sh to client
+  copy: src=sftp.sh dest=/usr/local/src/ mode=0755
+
+- name: setup sftp
+  shell: /usr/local/src/sftp.sh

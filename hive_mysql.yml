@@ -1,0 +1,9 @@
+---
+- hosts: hive_mysql
+  remote_user: root
+  vars: 
+    - mysql_data_path: "/home/mysql/data"
+    - mysql_root_password: "mysql123"
+
+  roles:
+     - hive_mysql

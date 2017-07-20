@@ -1,0 +1,66 @@
+---
+- name: Configure core-site.xml
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=core-site.xml owner=hadoop group=hadoop
+  notify:
+     - restart hadoop-dfs
+     - restart yarn-resourcemanager
+     - restart yarn-zkfc
+     - restart datanode
+     - restart journalnode
+     - restart nodemanager
+
+- name: Configure hdfs-site.xml
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=hdfs-site.xml owner=hadoop group=hadoop
+  notify:
+   - restart hadoop-dfs
+   - restart yarn-resourcemanager
+   - restart yarn-zkfc
+   - restart datanode
+   - restart journalnode
+   - restart nodemanager
+
+- name: Configure slaves
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=slaves owner=hadoop group=hadoop
+  notify:
+   - restart hadoop-dfs
+   - restart yarn-resourcemanager
+   - restart yarn-zkfc
+   - restart datanode
+   - restart journalnode
+   - restart nodemanager
+
+- name: Configure yarn-site.xml
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=yarn-site.xml owner=hadoop group=hadoop
+  notify:
+   - restart hadoop-dfs
+   - restart yarn-resourcemanager
+   - restart yarn-zkfc
+   - restart datanode
+   - restart journalnode
+   - restart nodemanager
+
+- name: Configure mapred-site.xml
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=mapred-site.xml owner=hadoop group=hadoop
+  notify:
+   - restart hadoop-dfs
+   - restart yarn-resourcemanager
+   - restart yarn-zkfc
+   - restart datanode
+   - restart journalnode
+   - restart nodemanager
+
+- name: Configure  hadoop-env.sh
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=hadoop-env.sh owner=hadoop group=hadoop
+  notify:
+   -stop all
+   -start all
+
+- name: Configure yarn-env.sh
+  template: dest="/home/hadoop/hadoop-2.6.0/etc/hadoop" src=yarn-env.sh owner=hadoop group=hadoop
+  notify: 
+   - restart hadoop-dfs
+   - restart yarn-resourcemanager
+   - restart yarn-zkfc
+   - restart datanode
+   - restart journalnode
+   - restart nodemanager

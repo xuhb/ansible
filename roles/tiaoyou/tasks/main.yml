@@ -1,0 +1,26 @@
+---
+- name: set /etc/security/limit.conf
+  shell: /bin/echo {{ item }} >> /etc/security/limits.conf
+  with_items:
+         - root soft nofile 65535
+         - root hard nofile 65535
+         - \* soft nofile 65535
+         - \* hard nofile 65535
+         - hadoop \- stack 20480
+         - hadoop \- noproc 40000  
+
+#- name: sysctl -p
+#  shell: source /etc/security/limits.conf
+
+- name: install libselinux-python
+  yum:
+    name: libselinux-python
+    state: present
+
+- name: turn off selinux
+  selinux:
+    state: disabled
+
+- name: stop iptables
+  shell: service iptables stop
+

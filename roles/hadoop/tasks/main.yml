@@ -1,0 +1,8 @@
+---
+- include: install.yml
+  when: "status == 'install'"
+
+#- include: inithadoop.yml
+#  when: "status == 'install'"
+
+- include: configure.yml

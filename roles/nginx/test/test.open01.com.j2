@@ -1,0 +1,20 @@
+upstream test.open01.com{
+    server 172.17.90.8:8080;
+    server 172.17.90.9:8080;
+}
+
+server {
+    listen      80 default;
+    server_name test.open01.com;
+
+    location / {
+        proxy_pass http://test.open01.com;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}

@@ -1,0 +1,17 @@
+---
+#status 首次安装时为install 以后修改为空值即可
+- hosts: hive
+  remote_user: root
+  vars: 
+     - mysql_data_path: "/home/mysql/data"
+     - mysql_root_password: "password"
+     - mysql_ip: "192.168.100.33"
+     - database: "hive"
+     - hive_user: "hive"
+     - hive_pwd: "hive"
+
+     - hive_home: "/home/hadoop/hive-1.2.1"
+     - hadoop_home: "/home/hadoop/hadoop-2.6.0"
+     - status: "install"
+  roles:
+     - hive

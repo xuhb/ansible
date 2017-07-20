@@ -1,0 +1,35 @@
+#!/bin/bash
+#################### 设置路径 ####################
+#BASE_PATH=$(cd `dirname $0`; pwd)
+#DOCKER_FILES=${BASE_PATH}/docker_files/
+#################### Docker Registry Server ####################
+DOCKER_REGISTRY_HOST=192.168.1.205
+DOCKER_REGISTRY_PORT=5000
+#################### ZooKeeper ####################
+ZOOKEEPER_HOSTS=(192.168.1.205)
+ZOOKEEPER_PORT=5000
+#################### Nginx Server ####################
+NGINX_HOSTS=192.168.1.205
+#################### Tomcat Server ####################
+TOMCAT_HOSTS=192.168.1.205
+TOMCAT_PORT=8080
+TOMCAT_ROOT="~/webapps"
+#################### Campass ####################
+CAMPASS_HOSTS=192.168.1.205
+CAMPASS_NAME=test
+CAMPASS_GIT_REPO=http://zhiyu@192.168.1.110/zhiyu/${CAMPASS_NAME}.git
+CAMPASS_ROOT="~/webapps"
+#################### Docker Agents ####################
+DOCKER_HOSTS=${DOCKER_REGISTRY_HOST},${NGINX_HOSTS},${TOMCAT_HOSTS},${CAMPASS_HOSTS}
+DOCKER_HOSTS=(${DOCKER_HOSTS//,/ })
+#删除重复HOST
+len=${#DOCKER_HOSTS[@]}
+for((i=0;i<$len;i++))
+do
+  for((j=$len-1;j>i;j--))
+  do
+    if [[ ${DOCKER_HOSTS[i]} = ${DOCKER_HOSTS[j]} ]]; then
+      unset DOCKER_HOSTS[i]
+    fi
+  done
+done

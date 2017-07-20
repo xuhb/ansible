@@ -1,0 +1,8 @@
+{% for host in groups[zookeeper_ansible_host_group] %}
+# Host {{ host }}
+server.{{ hostvars[host].zookeeper_id }}={{ hostvars[host][zookeeper_server_variable] }}:{{ zookeeper_leader_port|default('2888') }}:{{ zookeeper_election_port|default('3888') }}
+{% endfor %}
+
+{% for host in groups['zookeeper'] %}
+server.{{hostvars[host]['zookeeper_id']}}={% if hostvars[host]['zk_ip'] is defined %}{{ hostvars[host]['zk_ip'] }}{% else %}{{ hostvars[host].ansible_default_ipv4.address }}{% endif %}:2888:3888
+{% endfor %}

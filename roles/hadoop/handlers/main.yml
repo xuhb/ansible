@@ -1,0 +1,39 @@
+---
+- name: restart hadoop-dfs
+  action: shell {{ hadoop_home }}/sbin/hadoop-daemon.sh  --script hdfs stop namenode; {{ hadoop_home }}/sbin/hadoop-daemon.sh  --script hdfs start namenode
+  when: (hadoop_type_of_node == 'master1') or (hadoop_type_of_node == 'master2')
+
+- name: restart yarn-resourcemanager
+  action: shell {{ hadoop_home }}/sbin/yarn-daemon.sh stop resourcemanager; {{ hadoop_home }}/sbin/yarn-daemon.sh start resourcemanager
+  when: (hadoop_type_of_node == 'master1') or (hadoop_type_of_node == 'master2')
+
+- name: restart yarn-zkfc
+  action: shell {{ hadoop_home }}/sbin/hadoop-daemon.sh stop zkfc; {{ hadoop_home }}/sbin/hadoop-daemon.sh start zkfc
+  when: (hadoop_type_of_node == 'master1') or (hadoop_type_of_node == 'master2')
+
+- name: restart datanode
+  action: shell {{ hadoop_home }}/sbin/hadoop-daemon.sh stop  datanode ; {{ hadoop_home }}/sbin/hadoop-daemon.sh start  datanode
+  when: (hadoop_type_of_node == 'master1') or (hadoop_type_of_node == 'master2') or (hadoop_type_of_node == 'slave')
+
+- name: restart journalnode
+  action: shell {{ hadoop_home }}/sbin/hadoop-daemon.sh stop  journalnode ; {{ hadoop_home }}/sbin/hadoop-daemon.sh start  journalnode
+  when: (hadoop_type_of_node == 'master1') or (hadoop_type_of_node == 'master2') or (hadoop_type_of_node == 'slave')
+
+
+- name: restart nodemanager
+  action: shell {{ hadoop_home }}/sbin/yarn-daemon.sh stop nodemanager ; {{ hadoop_home }}/sbin/yarn-daemon.sh start nodemanager
+  when: (hadoop_type_of_node == 'master1') or (hadoop_type_of_node == 'master2') or (hadoop_type_of_node == 'slave')
+
+#- name: restart all
+#  action: shell /home/hadoop/hadoop-2.6.0/sbin/stop-all.sh ; /home/hadoop/hadoop-2.6.0/sbin/start-all.sh
+#  when: hadoop_type_of_node == 'master'
+
+- name: stop all
+  action: shell /home/hadoop/hadoop-2.6.0/sbin/stop-all.sh
+  when: hadoop_type_of_node == 'master'
+
+
+- name: start all
+  action: shell /home/hadoop/hadoop-2.6.0/sbin/start-all.sh
+  when: hadoop_type_of_node == 'master'
+

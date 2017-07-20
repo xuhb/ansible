@@ -1,0 +1,7 @@
+---
+- name: restart httpd
+  action: shell /home/hadoop/restarthttpd.sh
+
+- name: restart hadoop
+  action: shell /home/hadoop/hadoop-2.6.0/sbin/start-all.sh
+  when: hadoop_type_of_node == 'master'

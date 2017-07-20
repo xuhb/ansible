@@ -1,0 +1,12 @@
+#首次安装status值为install 后面修改配置文件时为空值即可
+---
+- hosts: mesos
+  remote_user: root
+  vars: 
+     - zk_ip_1: "open132"
+     - zk_ip_2: "open133"
+     - zk_ip_3: "open134"
+     - status: " "
+
+  roles:
+     - mesos

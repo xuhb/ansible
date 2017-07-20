@@ -1,0 +1,94 @@
+# RedHat related OSs
+- name: Yum install {{ item }}
+  action: yum pkg={{ item }} state=installed
+  when: "ansible_os_family == 'RedHat'"
+  with_items:
+  - wget
+  - tar
+  - gzip
+  - java-1.6.0-openjdk
+
+# Debian related OSs
+- name: Apt install {{ item }}
+  action: apt pkg={{ item }} state=installed update_cache=yes cache_valid_time=604800
+  when: "ansible_os_family == 'Debian'"
+  with_items:
+  - wget
+  - tar
+  - gzip
+  - openjdk-6-jre-headless
+
+- get_url: url={{ mirrors|random }}/hadoop-1.2.1.tar.gz dest=/tmp/hadoop-1.2.1.tar.gz force=no
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+
+- unarchive: src=/tmp/hadoop-1.2.1.tar.gz dest=/opt creates=/opt/hadoop-1.2.1
+
+- file: dest={{ hadoop_home }} src=/opt/hadoop-1.2.1 state=link
+
+- file: dest=/opt/hadoop src={{ hadoop_home }} state=link
+
+- lineinfile: dest="{{ hadoop_home }}/conf/hadoop-env.sh" regexp=JAVA_HOME= line="export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64"
+  when: "ansible_os_family == 'Debian'"
+
+- lineinfile: dest="{{ hadoop_home }}/conf/hadoop-env.sh" regexp=JAVA_HOME= line="export JAVA_HOME=/usr/lib/jvm/jre-1.6.0"
+  when: "ansible_os_family == 'RedHat'"
+
+- template: src=mapred-site.xml dest="{{ hadoop_home }}/conf/mapred-site.xml" owner=root group=root
+  notify:
+   - restart hadoop-dfs
+   - restart hadoop-mapred
+   - restart hadoop-datanode
+   - restart hadoop-tasktracker
+
+- template: src=core-site.xml dest="{{ hadoop_home }}/conf/core-site.xml" owner=root group=root
+  notify:
+   - restart hadoop-dfs
+   - restart hadoop-mapred
+   - restart hadoop-datanode
+   - restart hadoop-tasktracker
+
+- template: src=masters dest="{{ hadoop_home }}/conf/masters" owner=root group=root
+  notify:
+   - restart hadoop-dfs
+   - restart hadoop-mapred
+   - restart hadoop-datanode
+   - restart hadoop-tasktracker
+
+- template: src=slaves dest="{{ hadoop_home }}/conf/slaves" owner=root group=root
+  notify:
+   - restart hadoop-dfs
+   - restart hadoop-mapred
+   - refreshDFSNodes
+   - refreshMRNodes
+   - restart hadoop-datanode
+   - restart hadoop-tasktracker
+
+- command: "{{ hadoop_home }}/bin/hadoop namenode -format creates=/tmp/hadoop-root/dfs/name"
+  when: "hadoop_type_of_node == 'master'"
+
+- name: Open port {{item}} - tcp in the firewall
+  command: iptables -I INPUT -p tcp --dport {{item}}:{{item}} -j ACCEPT
+  ignore_errors: yes
+  with_items:
+  - 50070
+  - 50030
+
+- name: Open all ports for eth0 in the firewall
+  command: iptables -I INPUT -p tcp -s {{ hostvars[item]['ansible_eth0']['ipv4']['address'] }}  -j ACCEPT
+  ignore_errors: yes
+  with_items: "{{ groups.all }}"
+  when: hostvars[item]['ansible_eth0'] is defined
+
+- name: Open all ports for eth1 in the firewall
+  command: iptables -I INPUT -p tcp -s {{ hostvars[item]['ansible_eth1']['ipv4']['address'] }}  -j ACCEPT
+  ignore_errors: yes
+  with_items: "{{ groups.all }}"
+  when: hostvars[item]['ansible_eth1'] is defined
+
+- name: save iptables
+  shell: iptables-save > /etc/sysconfig/iptables
+  when: "ansible_os_family == 'RedHat'"
+

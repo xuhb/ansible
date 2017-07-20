@@ -1,0 +1,10 @@
+---
+#创建用户并添加sudo权限
+#user 为要创建的用户名，Kaishu@hadoop为密码
+- hosts: hosts_all
+  remote_user: root
+  vars:
+    - user: hadoop
+
+  roles:
+     - useradd

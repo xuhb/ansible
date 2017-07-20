@@ -1,0 +1,8 @@
+#首次安装status值为install 后面修改配置文件时为空值即可
+---
+- hosts: flume
+  remote_user: hadoop
+  vars:
+    - status: "install"
+  roles:
+     - flume

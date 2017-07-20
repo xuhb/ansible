@@ -1,0 +1,104 @@
+[registry]
+open128 DOCKER_REGISTRY_HOST=172.16.1.128
+
+[hosts_all]
+bigdata01 hostname=bigdata01
+bigdata02 hostname=bigdata02
+bigdata03 hostname=bigdata03
+bigdata04 hostname=bigdata04
+bigdata05 hostname=bigdata05
+bigdata06 hostname=bigdata06
+bigdata07 hostname=bigdata07
+bigdata08 hostname=bigdata08
+bigdata09 hostname=bigdata09
+bigdata10 hostname=bigdata10
+bigdata11
+bigdata12
+
+[spark]
+bigdata01 spark_type=slave
+bigdata02 spark_type=slave
+bigdata03 spark_type=master
+bigdata04 spark_type=slave
+bigdata05 spark_type=slave
+bigdata06 spark_type=slave
+bigdata07 spark_type=slave
+bigdata08 spark_type=slave
+bigdata09 spark_type=slave
+[jdk]
+bigdata01
+
+[zookeeper1]
+open132 zookeeper_id=1
+open133 zookeeper_id=2
+open134 zookeeper_id=3
+
+[hd_master]
+open131
+
+
+[hdm]
+open129
+open130
+open131
+open132
+open133
+
+[hive]
+bigdata09
+
+[134]
+172.16.1.134 
+
+[es]
+open133 node_name=open133 
+open134 node_name=open134
+
+[rabbitmq]
+bigdata11
+
+[redis]
+bigdata11
+
+[zabbix_server]
+open130
+[flume]
+open132
+[kafka]
+open131 broker_id=1 
+open132 broker_id=2
+open133 broker_id=3
+
+[gitlab]
+open134
+
+[mesos]
+open130 mesos_type=master
+open131 mesos_type=slave
+open132 mesos_type=slave
+open133 mesos_type=slave
+open134 mesos_type=slave
+
+[137]
+open137
+
+[zookeeper]
+bigdata04 zookeeper_id=1
+bigdata05 zookeeper_id=2
+bigdata06 zookeeper_id=3
+[hadoop]
+bigdata01 hadoop_type_of_node=master1
+bigdata02 hadoop_type_of_node=master2
+bigdata03 hadoop_type_of_node=slave
+bigdata04 hadoop_type_of_node=slave
+bigdata05 hadoop_type_of_node=slave
+bigdata06 hadoop_type_of_node=slave
+bigdata07 hadoop_type_of_node=slave
+bigdata08 hadoop_type_of_node=slave
+bigdata09 hadoop_type_of_node=slave
+
+[mysql]
+bigdata10
+
+[hive_mysql]
+bigdata09

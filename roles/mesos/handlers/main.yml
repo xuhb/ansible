@@ -1,0 +1,6 @@
+---
+- name: restart agents
+  shell: /home/hadoop/mesos/sbin/mesos-stop-agents.sh ; /home/hadoop/mesos/sbin/mesos-start-agents.sh
+
+- name: restart master 
+  shell: /home/hadoop/mesos/sbin/mesos-start-masters.sh ; /home/hadoop/mesos/sbin/mesos-start-masters.sh

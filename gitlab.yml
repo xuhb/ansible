@@ -1,0 +1,9 @@
+- hosts: gitlab
+  become: yes
+
+  vars:
+     gitlab_version: "8.6.9"
+     gitlab_version_suffix: "-ce.2"
+
+  roles:
+     - role: samdoran.gitlab

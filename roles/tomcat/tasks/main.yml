@@ -1,0 +1,6 @@
+---
+- name: Copy tomcat-9.0.0.M17.tar.gz to client
+  unarchive: src=/etc/ansible/package/tomcat-9.0.0.M17.tgz  dest=/home/hadoop/ owner=hadoop group=hadoop
+
+
+

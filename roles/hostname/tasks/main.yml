@@ -1,0 +1,13 @@
+---
+- name : show hostname
+  shell : hostname
+- name : show ip
+  command : ip a
+#用ip结尾方式修改主机名
+#- hostname : name=open{{ ansible_default_ipv4.address.split('.')[-1] }}
+#自定义主机名,一般在hosts文件里指定hostname
+- hostname : name={{hostname}}
+
+- name : copy hosts file
+  template: src=hosts dest=/etc/
+

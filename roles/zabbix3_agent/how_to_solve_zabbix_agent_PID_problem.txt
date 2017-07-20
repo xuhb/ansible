@@ -1,0 +1,31 @@
+Zabbix agent 3 and PID problem. Zabbix agent doesn't start
+
+If you tried to start Zabbix agent but you get messages like this:
+
+● zabbix-agent.service - Zabbix Agent
+Loaded: loaded (/usr/lib/systemd/system/zabbix-agent.service; disabled; vendor preset: disabled)
+Active: inactive (dead)
+
+...
+Feb 15 10:15:44 quadverto-uat systemd[1]: zabbix-agent.service never wrote its PID file. Failing.
+Feb 15 10:15:44 quadverto-uat systemd[1]: Failed to start Zabbix Agent.
+Feb 15 10:15:44 quadverto-uat systemd[1]: Unit zabbix-agent.service entered failed state.
+Feb 15 10:15:44 quadverto-uat systemd[1]: zabbix-agent.service failed.
+Feb 15 10:15:46 quadverto-uat systemd[1]: Stopped Zabbix Agent
+...
+
+Try this:
+
+
+# yum install policycoreutils-python
+
+Create custom SElinux exceptions with a zabbix-agent module:
+cat /var/log/audit/audit.log | grep zabbix | audit2allow -M zabbix-agent
+
+Apply the generated SElinux module:
+# semodule -i zabbix-agent.pp
+
+Restart the Zabbix Agent service: systemctl restart zabbix-agent
+
+
+

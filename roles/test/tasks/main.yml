@@ -1,0 +1,7 @@
+---
+- name: Setup conf
+  template: dest="/home/hadoop/" src=test.conf owner=hadoop group=hadoop
+#  notify:
+#   - restart hadoop
+- name: Setup alaves
+  template: dest="/home/hadoop/" src=slaves owner=hadoop group=hadoop

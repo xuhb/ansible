@@ -1,0 +1,6 @@
+---
+- name: restart flume
+  shell: /home/hadoop/apache-flume-1.7.0-bin/bin/killFlume.sh ;/home/hadoop/apache-flume-1.7.0-bin/bin/runreceiFlume.sh
+
+#- name: stop flume
+#  shell: /home/hadoop/apache-flume-1.7.0-bin/bin/runreceiFlume.sh

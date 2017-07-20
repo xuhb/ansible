@@ -1,0 +1,30 @@
+---
+
+- name: Copy mesos_tar_gz to client
+  unarchive: src=/etc/ansible/package/mesos.tgz  dest=/usr/local/ owner=hadoop group=hadoop
+  when: status == 'install'
+
+- name: Setup masters
+  template: dest="/usr/local/mesos/etc/mesos" src=masters owner=hadoop group=hadoop
+
+- name: Setup slaves
+  template: dest="/usr/local/mesos/etc/mesos" src=slaves owner=hadoop group=hadoop
+
+- name: Setup mesos-agent-env.sh
+  template: dest="/usr/local/mesos/etc/mesos" src=mesos-agent-env.sh owner=hadoop group=hadoop
+
+- name: Setup mesos-master-env.sh
+  template: dest="/usr/local/mesos/etc/mesos" src=mesos-master-env.sh owner=hadoop group=hadoop
+
+- name: mkdir master datadir
+  file: path=/var/run/mesos/master state=directory owner=hadoop group=hadoop
+
+- name: mkdir agent datadir
+  file: path=/var/run/mesos/agent state=directory owner=hadoop group=hadoop
+
+- name: mkdir log master datadir
+  file: path=/var/log/mesos/master state=directory owner=hadoop group=hadoop
+
+- name: mkdir log agent datadir
+  file: path=/var/log/mesos/agent state=directory owner=hadoop group=hadoop
+

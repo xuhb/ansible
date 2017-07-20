@@ -1,0 +1,9 @@
+---
+- name: Copy node_tar_gz to client
+  unarchive: src=/etc/ansible/package/node-v6.10.2-linux-x64.tar.xz  dest=/usr/local
+
+- name: Copy node.sh
+  template: dest="/usr/local/src" src=node.sh mode=0755
+
+- name: setup node env
+  action: shell /usr/local/src/node.sh

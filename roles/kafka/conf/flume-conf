@@ -1,0 +1,137 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+
+# The configuration file needs to define the sources, 
+# the channels and the sinks.
+# Sources, channels and sinks are defined per agent, 
+# in this case called 'agent'
+
+agent.sources = seqGenSrc
+agent.channels = memoryChannel
+agent.sinks = loggerSink
+
+# For each one of the sources, the type is defined
+agent.sources.seqGenSrc.type = seq
+
+# The channel can be defined as follows.
+agent.sources.seqGenSrc.channels = memoryChannel
+
+# Each sink's type must be defined
+agent.sinks.loggerSink.type = logger
+
+#Specify the channel the sink should use
+agent.sinks.loggerSink.channel = memoryChannel
+
+# Each channel's type is defined.
+agent.channels.memoryChannel.type = memory
+
+# Other config values specific to each type of channel(sink or source)
+# can be defined as well
+# In this case, it specifies the capacity of the memory channel
+agent.channels.memoryChannel.capacity = 100
+
+# Define a memory channel called ch1 on agent1
+agent1.channels.ch1.type = memory
+agent1.channels.ch1.capacity = 100000
+agent1.channels.ch1.transactionCapacity = 100000
+agent1.channels.ch1.keep-alive = 30
+# Define an Avro source called avro-source1 on agent1 and tell it
+# # to bind to 0.0.0.0:41414. Connect it to channel ch1.
+agent1.sources.avro-source1.channels = ch2
+agent1.sources.avro-source1.type = avro
+agent1.sources.avro-source1.bind = 0.0.0.0
+agent1.sources.avro-source1.port = 41414
+agent1.sources.avro-source1.threads = 20
+#-->默认是replicationg，还有multiplexer
+#agent1.sources.avro-source1.selector.type = multiplexer
+agent1.channels.ch2.type = file
+#-->检测点文件所存储的目录
+agent1.channels.ch2.checkpointDir = /home/hadoop/flume-1.6.0/checkpoint
+#-->数据存储所在的目录设置
+agent1.channels.ch2.dataDirs = /home/sftp/jimu/
+#-->隧道的最大容量
+#-->事务容量的最大值设置
+#
+##agent1.channels.ch2.transactionCapacity = 1000
+##-->检测点之间的时间值设置（单位微秒）
+##agent1.channels.ch2.checkpointInterval = 100000
+##-->一个单一日志的最大值设置（以字节为单位）
+##agent1.channels.ch2.maxFileSize = 2146435071
+##-->一个存放操作的等待时间值（秒）设置
+agent1.channels.ch2.keep-alive = 30
+# Define a logger sink that simply logs all events it receives
+# # and connect it to the other end of the same channel.
+agent1.sinks.log-sink1.channel = ch2
+agent1.sinks.log-sink1.type = hdfs
+#-->HDFS directory path (eg hdfs://master:9000/flume/log/%Y%m%d/)
+agent1.sinks.log-sink1.hdfs.path = hdfs://master:9000/flume/%Y%m%d/%{host}/%{name}
+#-->Name prefixed to files created by Flume in hdfs directory
+#
+agent1.sinks.log-sink1.hdfs.filePrefix = %{host}_log
+agent1.sinks.log-sink1.hdfs.useLocalTimeStamp = true
+agent1.sinks.log-sink1.hdfs.inUseSuffix = .tmp
+
+#-->Hdfs writeFormat( Text or Writable )
+
+agent1.sinks.log-sink1.hdfs.writeFormat = Text
+
+#SequenceFile   File format: currently SequenceFile or DataStream
+
+agent1.sinks.log-sink1.hdfs.fileType = DataStream
+
+#-->多少秒切割一个文件Number of seconds to wait before rolling current file (0 = never roll based on time interval)
+
+agent1.sinks.log-sink1.hdfs.rollInterval = 600
+
+#-->存储文件大小1KB=1028Byte,1MB=1024KB,File size to trigger roll, in bytes (0: never roll based on file size)
+
+agent1.sinks.log-sink1.hdfs.rollSize = 0
+
+#-->多少行写入一个文件Number of events written to file before it rolled (0 = never roll based on number of events)
+
+agent1.sinks.log-sink1.hdfs.rollCount = 0
+
+#number of events written to file before it flushed to HDFS
+
+agent1.sinks.log-sink1.hdfs.batchSize = 10
+agent1.sinks.log-sink1.hdfs.txnEventMax = 1000
+agent1.sinks.log-sink1.hdfs.callTimeout = 60000
+agent1.sinks.log-sink1.hdfs.appendTimeout = 60000
+
+#-->Number of threads per HDFS sink for HDFS IO ops (open, write, etc.)
+#agent1.sinks.log-sink1.hdfs.threadsPoolSize = 100
+#-->Compression codec. one of following : gzip, bzip2, lzo, snappy,如果fileType类型为DataStream，则不能设codeC
+#agent1.sinks.log-sink1.hdfs.codeC = gzip  
+
+#another sink
+#agent1.sinks.log-sink2.channel = ch2
+#"file_roll"表示将数据存入本地文件系统
+#agent1.sinks.log-sink2.type = FILE_ROLL
+#指定数据存放目录
+#agent1.sinks.log-sink2.sink.directory = /root/flumelogs
+#设置滚动时间(即每隔一段你设置的时间，系统会生成一个新的文件存放数据  
+#(如果不指定，系统会默认生成N个文件，将数据分别存入N个文件中，设为0时表示只有一个文件存放数据) 
+#agent1.sinks.log-sink2.sink.rollInterval = 0
+
+
+#Finally, now that we've defined all of our components, tell
+#agent1 which ones we want to activate.
+
+agent1.channels = ch2
+agent1.sources = avro-source1
+agent1.sinks = log-sink1

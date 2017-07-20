@@ -1,0 +1,16 @@
+---
+- name: Copy jdk_tar_gz to client
+  unarchive: src=/etc/ansible/package/jdk-{{ jdk_version }}-linux-x64.tar.gz  dest=/opt/
+- name: Install jdk
+  file: path=/opt/jdk{{ jdk_version }}/ owner=root group=root recurse=yes
+- name: Configure jdk
+  shell: /bin/echo {{ item }}  >> /etc/profile && source /etc/profile
+  #(shell和command的作用一样，不同的是可以使用管道符号和&&，可以运行多条命令)
+  with_items:
+   - export JAVA_HOME=/opt/jdk{{ jdk_version }}
+   - export PATH=\$JAVA_HOME/bin:\$JAVA_HOME/jre/bin:\$PATH
+   - export CLASSPATH=.\$CLASSPATH:\$JAVA_HOME/lib:\$JAVA_HOME/jre/lib:\$JAVA_HOME/lib/tools.jar
+
+- name: source profile
+  shell: source /etc/profile
+

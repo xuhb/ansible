@@ -1,0 +1,7 @@
+---
+# defaults file for mysql
+mysql_root_password: password
+mysql_users:
+    - name: user
+      password: password
+      privs: "cidb.*:ALL"

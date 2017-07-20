@@ -1,0 +1,3 @@
+---
+- name: restart zookeeper
+  shell: /home/hadoop/zookeeper-3.4.6/bin/stop.sh ;/home/hadoop/zookeeper-3.4.6/bin/start.sh

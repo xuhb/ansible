@@ -1,0 +1,10 @@
+--- 
+zookeeper_data_dir: "/home/hadoop/zookeeper-3.4.6/data"
+zookeeper_log_dir: "/var/log/zookeeper"
+zookeeper_dir: "/home/hadoop/zookeeper-3.4.6"
+zookeeper_conf_dir: "/home/hadoop/zookeeper-3.4.6/conf"
+tatus: "install"
+
+
+
+

@@ -1,0 +1,6 @@
+---
+- hosts: hds
+  remote_user: root
+  roles:
+     - hostname
+     - useradd

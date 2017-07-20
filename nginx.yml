@@ -1,0 +1,19 @@
+
+- name: install nginx
+  tags:
+    - nginx
+  hosts:
+    - nginx
+  roles:
+    - role: nginx
+  vars:
+    nginx_version: 1.10.2
+    nginx_conf_others:
+     test.open01.com:
+       src: /etc/ansible/roles/nginx/test/test.open01.com.j2
+       dest: test.open01.com.conf
+    nginx_conf_others:
+     pic.open01.com:
+       src: /etc/ansible/roles/nginx/test/pic.open01.com.j2
+       dest: pic.open01.com.conf
+

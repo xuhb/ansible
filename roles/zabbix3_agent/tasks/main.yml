@@ -1,0 +1,10 @@
+---
+# tasks file for zabbix3_agent
+- name: "Install the correct repository"
+  include: "RedHat.yml"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - always
+
+- name: "Ensure Zabbix agent is started and configured to start at boot"
+  service: name=zabbix-agent state=started enabled=yes

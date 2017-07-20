@@ -1,0 +1,50 @@
+# usage:
+# ansible-playbook -i hosts nopass.yml -e "hosts=hadoop user=hadoop" -k
+# ansible 配置相应服务器用户执行下面命令 例如：hadoop 用
+# ssh-keygen -b 2048 -t rsa -q -N '' -f ~/.ssh/id_rsa
+#注意如何普通用户第一次连接的时候需要手动输入yes否则不成功
+- hosts: "{{ hosts }}"
+  vars:
+    - sshpubs_rslt: "{{ lookup('env', 'PWD') + '/sshpubs.rslt' }}"
+  tasks:
+    - name: Deliver My SSH key to Each Node
+      authorized_key:
+          user: "{{ user }}"
+          key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+          key_options: ""
+          state: present
+          exclusive: no
+    - name: Generate SSH keys
+      shell: ssh-keygen -b 2048 -t rsa -q -N '' -f "{{ ansible_env.HOME }}/.ssh/id_rsa"
+      args:
+        creates: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+    - name: Grab SSH keys
+      shell: cat "{{ ansible_env.HOME }}/.ssh/id_rsa.pub"
+      register: ssh_pub
+  #    - debug:
+  #        var: ssh_pub.stdout
+    - local_action: command bash -c 'rm -rf {{ sshpubs_rslt }}'
+    - local_action: command bash -c 'echo {{ ssh_pub.stdout }} >> {{ sshpubs_rslt }}'
+    - name: Deliver Grabbed SSH keys to Each Node
+      authorized_key:
+          user: "{{ user }}"
+          key: "{{ lookup('file', sshpubs_rslt) }}"
+          key_options: ""
+          state: present
+          exclusive: no
+#    - name: turn off StrictHostKeyChecking
+#      blockinfile:
+#        dest: "{{ ansible_env.HOME }}/.ssh/config"
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ hostvars[item]['inventory_hostname'] }}"
+#        insertafter: EOF
+#        create: yes
+#        block: |
+#          Host {{ hostvars[item]['inventory_hostname'] }}
+#            StrictHostKeyChecking no
+#      with_items:
+#          - "{{ groups[hosts] }}"
+
+#    - name: chmod config
+#      file: path={{ ansible_env.HOME }}/.ssh/config mode=0600
+
+    - local_action: command bash -c 'rm -rf {{ sshpubs_rslt }}'

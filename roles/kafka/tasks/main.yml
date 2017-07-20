@@ -1,0 +1,26 @@
+---
+
+- name: Copy kafka_tar_gz to client
+  unarchive: src=/etc/ansible/package/kafka_2.10-0.10.2.0.tgz  dest=/home/hadoop/ owner=hadoop group=hadoop
+  when: status == 'install'
+
+- name: Setup server.properties
+  template: dest="/home/hadoop/kafka_2.10-0.10.2.0/config/server.properties" src=server.properties owner=hadoop group=hadoop
+  notify:
+   - restart kafka
+
+#- name: Setup producer.properties
+#  template: dest="/home/hadoop/kafka_2.10-0.10.2.0/config/producer.properties" src=producer.properties owner=hadoop group=hadoop
+#  notify:
+#   - restart kafka
+
+- name: copy start.sh
+  copy: dest="/home/hadoop/kafka_2.10-0.10.2.0/bin" src=start.sh owner=hadoop group=hadoop mode=0755
+
+- name: copy stop.sh
+  copy: dest="/home/hadoop/kafka_2.10-0.10.2.0/bin" src=stop.sh owner=hadoop group=hadoop mode=0755
+
+- name: start kafka
+  shell: /home/hadoop/kafka_2.10-0.10.2.0/bin/start.sh
+  when: status == 'install'
+

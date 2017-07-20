@@ -1,0 +1,20 @@
+---
+- name: Copy spark_tar_gz to client
+  unarchive: src=/etc/ansible/package/spark-1.6.3.tgz  dest=/home/hadoop/ owner=hadoop group=hadoop
+
+- name: Setup spark slaves
+  template: dest="/home/hadoop/spark-1.6.3/conf" src=slaves owner=hadoop group=hadoop
+
+- name: Setup spark-env.sh
+  template: dest="/home/hadoop/spark-1.6.3/conf" src=spark-env.sh owner=hadoop group=hadoop mode=0755
+
+- name: Configure hdfs-site.xml
+  template: dest="/home/hadoop/spark-1.6.3/conf" src=hdfs-site.xml owner=hadoop group=hadoop
+
+- name: Setup hive-site.xml
+  template: dest="/home/hadoop/spark-1.6.3/conf" src=hive-site.xml owner=hadoop group=hadoop
+
+
+- name: start spark
+  action: shell /home/hadoop/spark-1.6.3/sbin/start-all.sh
+  when: "spark_type == 'master'"

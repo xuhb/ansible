@@ -1,0 +1,15 @@
+ansible jdk -m file -a  "path=/opt/jdk1.8.0_111 state=absent"
+
+ansible jdk -a "date  -s '2017-1-6 09:44:46' "
+
+ansible jdk -a "clock -w "
+ansible jdk -a "setenforce 0"
+ansible jdk -a "service iptables stop"
+ansible jdk -a "sed -i s/enforcing/disabled/g /etc/selinux/config"
+
+ansible jdk -m copy -a 'src=/home/hadoop/.ssh/authorized_keys dest=/home/hadoop/.ssh/'
+ansible jdk -a "cat /home/hadoop/.ssh/id_rsa.pub"
+
+--zk--
+ansible zk -a "/home/hadoop/zookeeper-3.4.6/bin/zkServer.sh start"
+

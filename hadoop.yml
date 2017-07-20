@@ -1,0 +1,28 @@
+---
+#注意要修改slaves模板对应的hosts name 默认为hadoop分组
+#首次安装status值为install 后面修改配置文件时为空值即可
+#rm1_ip,rm2_ip一般为NameNode1,NameNode2节点ip
+
+- hosts: hadoop
+  remote_user: hadoop
+  vars: 
+     - javapath: "/opt/jdk1.8.0_111"
+     - hadoop_home: "/home/hadoop/hadoop-2.6.0"
+     - zookeeper_host_1: "bigdata01"
+     - zookeeper_host_2: "bigdata02"
+     - zookeeper_host_3: "bigdata03"
+
+     - NameNode1: "bigdata02"
+     - NameNode2: "bigdata03"
+     - ResourceManager1: "bigdata02"
+     - ResourceManager2: "bigdata03"
+     - JournalNode1: "bigdata04"
+     - JournalNode2: "bigdata05"
+     - JournalNode3: "bigdata06"
+
+     - HistoryServer: "bigdata04"
+     - cpu: "5"
+
+     - status: "install"
+  roles:
+     - hadoop

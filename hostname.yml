@@ -1,0 +1,6 @@
+---
+#注意主机组名称默认为hosts_all,如不一致请修改模板目录hosts文件
+- hosts: hosts_all
+  remote_user: root
+  roles:
+     - hostname

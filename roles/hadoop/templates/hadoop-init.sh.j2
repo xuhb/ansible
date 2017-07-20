@@ -1,0 +1,8 @@
+#!/bin/bash
+/home/hadoop/hadoop-2.6.0/bin/hdfs zkfc -formatZK
+/home/hadoop/hadoop-2.6.0/sbin/hadoop-daemons.sh start journalnode
+/home/hadoop/hadoop-2.6.0/bin/hdfs namenode -format
+/home/hadoop/hadoop-2.6.0/sbin/hadoop-daemon.sh start namenode
+ssh -t hadoop@{{NameNode2}} "/home/hadoop/hadoop-2.6.0/bin/hdfs namenode -bootstrapStandby"
+hdfs dfs -mkdir -p hdfs://masters/user/spark/spark-events
+

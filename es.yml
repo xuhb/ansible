@@ -1,0 +1,8 @@
+---
+- hosts: es
+  remote_user: hadoop
+  vars:
+     - discovery_ip1: "192.168.100.35"
+     - discovery_ip2: "192.168.100.36"
+  roles:
+     - es

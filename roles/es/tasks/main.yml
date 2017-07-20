@@ -1,0 +1,17 @@
+---
+- name: Copy es_tar_gz to client
+  unarchive: src=/etc/ansible/package/elasticsearch-2.3.3.tgz  dest=/home/hadoop/  owner=hadoop group=hadoop
+
+- name: Configure elasticsearch.yml
+  template: dest="/home/hadoop/elasticsearch-2.3.3/config" src=elasticsearch.yml owner=hadoop group=hadoop
+  notify:
+   - restart elasticsearch
+
+- name: copy start.sh
+  copy: dest="/home/hadoop/elasticsearch-2.3.3/bin" src=start.sh owner=hadoop group=hadoop mode=0755
+
+- name: copy stop.sh
+  copy: dest="/home/hadoop/elasticsearch-2.3.3/bin" src=stop.sh owner=hadoop group=hadoop mode=0755
+
+- name: start elasticsearch
+  shell: /home/hadoop/elasticsearch-2.3.3/bin/start.sh

@@ -1,0 +1,50 @@
+---
+# Tasks specific for RedHat systems
+
+
+- name: "RedHat | Install basic repo file"
+  template: "src=rhel.repo.j2
+            dest=/etc/yum.repos.d/zabbix.repo
+            owner=root
+            group=root
+            mode=0644"
+  when: zabbix_repo
+  tags:
+    - zabbix-server
+    - init
+    - config
+
+- name: "RedHat | Restore SElinux context of /etc/yum.repos.d/zabbix.repo"
+  command: "/sbin/restorecon -F /etc/yum.repos.d/zabbix.repo"
+
+
+- name: "RedHat | Installing zabbix-agent"
+  yum:  pkg=zabbix-agent state=present
+  tags:
+    - zabbix-agent
+    - init
+    - config
+
+- name: "RedHat | Copy zabbix_agentd.conf configuration file"
+  copy: src=zabbix_agentd.conf dest=/etc/zabbix/zabbix_agentd.conf
+
+- name: "RedHat | Restore SElinux context of /etc/yum.repos.d/zabbix.repo"
+  command: "/sbin/restorecon -F /etc/zabbix/zabbix_agentd.conf"
+
+
+- name: "RedHat | Install SElinux Boolean module dependencies"
+  yum: name=libsemanage-python state=present
+  tags:
+    - init
+    - config
+
+#- name: RedHat | Setting SElinux boolean httpd_can_connect_zabbix to 1
+#  seboolean: name=httpd_can_connect_zabbix state=yes persistent=yes
+
+#- name: RedHat | Setting SElinux boolean zabbix_can_network to 1
+#  seboolean: name=zabbix_can_network state=yes persistent=yes
+
+
+#- name: RedHat | Firewalld | Opening port 10050 tcp
+#  firewalld: port=10050/tcp permanent=true state=enabled
+
